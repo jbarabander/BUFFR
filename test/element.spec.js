@@ -26,47 +26,28 @@ describe('Element Model', function () {
       });
     });
 
-    xit('should correctly save to database', function () {
-      return MW.create({
-        value: 58.44,
-        units: 'g/mol'
+    it('should correctly save to database', function () {
+      return Element.create({
+        name: "Sodium",
+        formula: "Na",
       })
-      .then(function (mW) {
-        return Element.create({
-          name: "Sodium",
-          formula: "Na",
-          mW: mW._id
-        });
-      })
-      .then(function (element) {
-        console.log(element);
-      }).catch(function (error) {
-        console.log(error);
-      })
-
-      // .then(function (error) {
-      //   expect(error.errors).to.have.property('formula');
-      //   expect(error.errors).to.have.property('mW');
-      //   expect(error.errors).to.have.property('name');
-      // });
+      .should.be.fulfilled.then(function (element) {
+        expect(element.name).to.equal('Sodium');
+        expect(element.formula).to.equal('Na');
+        expect(element.mW).to.be.closeTo(23, 0.5);
+      });
     });
 
-    xit('should use pre-validation hook to generate element.name', function () {
+    it('should use pre-validation hook to generate name and mW from formula', function () {
       var element = new Element();
       element.formula = "Na";
-      return element.validate().should.be.rejected.then(function (error) {
-        expect(error.errors).to.have.property('mW');
-        expect(error.errors).to.not.have.property('name');
-      });
+      return element.validate().should.be.fulfilled;
     });
 
-    xit('should use pre-validation hook to generate element.formula', function () {
+    it('should use pre-validation hook to generate formula and mW from name', function () {
       var element = new Element();
       element.name = "Sodium";
-      return element.validate().should.be.rejected.then(function (error) {
-        // only does not have 
-        expect(error.errors).to.have.property('mW');
-      });
+      return element.validate().should.be.fulfilled;
     });
     
   });

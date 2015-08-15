@@ -1,12 +1,12 @@
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-require('./')
+require('./');
 
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var compoundSchema = new mongoose.Schema({
   formula: {type: String, required: true},
-  mW: {type: ObjectId, required: true, ref: 'MW'},
+  mW: {type: Number, required: true},
   elements: {
     type: [{
       value: {

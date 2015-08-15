@@ -3,7 +3,16 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 require('./');
 
 var bufferSchema = new mongoose.Schema({
-  volume: {type: ObjectId, ref: 'Volume', required: true},
+  volume: { 
+    type: {
+      value: {type: Number},
+      units: {
+        type: String, 
+        enum: ['L', 'cL', 'dL', 'mL', 'uL']
+      }
+    },
+    required: true
+  },
   compounds: [{
     value: {
       type: ObjectId, 
