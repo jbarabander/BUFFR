@@ -4,8 +4,11 @@ mongoose.Promise = require('bluebird');
 var userSchema = new mongoose.Schema({
   username: {type: String, required: true},
   name: {
-    first: {type: String, required: true},
-    last: {type: String, required: true},
+    type: {
+      first: String,
+      last: String
+    },
+    required: true
   },
   email: {
     type: String, 
@@ -13,3 +16,7 @@ var userSchema = new mongoose.Schema({
     unique: true
   }
 });
+
+var User = mongoose.model('User', userSchema);
+
+module.exports = User;

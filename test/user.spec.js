@@ -12,11 +12,10 @@ describe('User Model', function () {
   describe('Validations', function () {
 
     it('should err if no username, name, or email provided', function () {
-      var buffer = new Compound();
-      return buffer.validate().should.be.rejected.then(function (error) {
+      var user = new User();
+      return user.validate().should.be.rejected.then(function (error) {
         expect(error.errors).to.have.property('username');
         expect(error.errors).to.have.property('name');
-        expect(error.errors).to.have.property('elements');
       });
     });
     

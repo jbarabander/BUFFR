@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon -e html,js,css ./bin/www",
-    "test": "mocha"
+    "start": "export BUFFR_DB=buffr; nodemon -e html,js,css ./bin/www",
+    "test": "export BUFFR_DB=buffrtest; mocha"
   },
   "dependencies": {
     "bluebird": "^2.9.34",
@@ -16,6 +16,7 @@
     "jade": "~1.11.0",
     "mongoose": "^4.1.2",
     "morgan": "~1.6.1",
+    "periodic-table": "0.0.1",
     "serve-favicon": "~2.3.0",
     "supertest": "^1.0.1"
   },

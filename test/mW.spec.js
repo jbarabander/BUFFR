@@ -18,6 +18,16 @@ describe('mW Model', function () {
         expect(error.errors).to.have.property('units');
       });
     });
+
+    it('should correctly save to database', function () {
+      return MW.create({
+        value: 58.44,
+        units: 'g/mol'
+      }).should.be.fulfilled.then(function (mW) {
+        expect(mW.value).to.equal(5.44);
+        expect(mW.units).to.equal('g/mol');
+      })
+    });
     
   });
 
