@@ -2,8 +2,6 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 require('./');
 
-var MW = require('./mW');
-
 var pt = require('periodic-table');
 
 var ObjectId = mongoose.Schema.Types.ObjectId;
@@ -26,17 +24,6 @@ var fillElement = function (element) {
     element.mW = Number(pt.symbols[element.formula].atomicMass.slice(0, -3));
   } 
 };
-
-// elementSchema.path('name').set(function (name) {
-//   this.formula = pt.elements[element.name];
-//   return name;
-// });
-
-// elementSchema.path('formula').set(function (formula) {
-//   this.name = pt.symbols[element.formula];
-//   return formula;
-// });
-
 
 elementSchema.pre('validate', function (next) {
   fillElement(this);

@@ -1,5 +1,4 @@
 var Element = require('../models/elements');
-var MW = require('../models/mW');
 
 var chai = require('chai');
 chai.use(require('chai-things'));
@@ -13,8 +12,7 @@ describe('Element Model', function () {
   describe('Validations', function () {
 
     afterEach(function () {
-      return Element.remove({})
-      .then(MW.remove({}));
+      return Element.remove({});
     });
 
     it('should err if no formula, mW, or name provided', function () {
@@ -37,7 +35,16 @@ describe('Element Model', function () {
         expect(element.mW).to.be.closeTo(23, 0.5);
       });
     });
+    
+  });
 
+  describe('Statics', function () {});
+
+  describe('Methods', function () {});
+
+  describe('Virtuals', function () {});
+
+  describe('Hooks', function () {
     it('should use pre-validation hook to generate name and mW from formula', function () {
       var element = new Element();
       element.formula = "Na";
@@ -49,15 +56,6 @@ describe('Element Model', function () {
       element.name = "Sodium";
       return element.validate().should.be.fulfilled;
     });
-    
   });
-
-  describe('Statics', function () {});
-
-  describe('Methods', function () {});
-
-  describe('Virtuals', function () {});
-
-  describe('Hooks', function () {});
 
 });

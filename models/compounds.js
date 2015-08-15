@@ -22,6 +22,16 @@ var compoundSchema = new mongoose.Schema({
   }
 });
 
+function compoundMatcher(str){
+  var str = str.replace(/\(/g,'').replace(/\)/g, '');
+  return str.match(/[A-Z][a-z]?\d?/g);
+}
+
+var x = compoundMatcher('NaCl2');
+
+var molecularWeight = x.reduce(function())
+
+
 var Compound = mongoose.model('Compound', compoundSchema);
 
 module.exports = Compound;
