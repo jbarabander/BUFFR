@@ -9,7 +9,6 @@ var expect = chai.expect;
 
 describe('Compound Model', function () {
 
-
   describe('Validations', function () {
 
     it('should err if no formula, mW, or elements provided', function () {
@@ -34,13 +33,10 @@ describe('Compound Model', function () {
 
   describe('Statics', function () {
 
-    it('should err if provided incorrect mW (custom validator)', function () {
+    xit('should correctly add elements from a formula', function () {
       
-      var element = new Element({
-        formula: "Na",
-        mW: 40
-      });
-      return element.validate().should.be.rejected;
+      var naCl = new Compound({formula: 'NaCl'});
+      return naCl.validate().should.be.fulfilled;
     });
 
   });

@@ -9,11 +9,10 @@ var expect = chai.expect;
 describe('Element Model', function () {
 
 
+
+
   describe('Validations', function () {
 
-    afterEach(function () {
-      return Element.remove({});
-    });
 
     it('should err if no formula or mW provided', function () {
       var element = new Element();

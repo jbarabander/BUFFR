@@ -1,5 +1,5 @@
 {
-	"undefined": "localhost/buffr",
+	"undefined": "localhost/buffrtest",
 	"dev": "localhost/buffrtest",
 	"prod": "localhost/buffr"
 }

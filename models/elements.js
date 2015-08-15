@@ -4,9 +4,6 @@ require('./');
 
 var pt = require('periodic-table');
 
-var ObjectId = mongoose.Schema.Types.ObjectId;
-
-
 
 var elementSchema = new mongoose.Schema({
   mW: {type: Number, required: true },
