@@ -14,3 +14,4 @@ var mWSchema = new mongoose.Schema({
 
 var MW = mongoose.model('MW', mWSchema);
 
+module.exports = MW;

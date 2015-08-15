@@ -7,16 +7,19 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var compoundSchema = new mongoose.Schema({
   formula: {type: String, required: true},
   mW: {type: ObjectId, required: true, ref: 'MW'},
-  elements: [{
-    value: {
-      type: ObjectId, 
-      ref: 'Element'
-    },
-    number: {
-      value: Number,
-      units: {type: String, enum: ['M', 'mM', 'uM', 'nM', 'pM']}
-    }
-  }]
+  elements: {
+    type: [{
+      value: {
+        type: ObjectId, 
+        ref: 'Element'
+      },
+      number: {
+        value: Number,
+        units: {type: String, enum: ['M', 'mM', 'uM', 'nM', 'pM']}
+      }
+    }],
+    required: true
+  }
 });
 
 var Compound = mongoose.model('Compound', compoundSchema);
