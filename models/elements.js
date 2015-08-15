@@ -9,31 +9,27 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 var elementSchema = new mongoose.Schema({
-  name: {type: String, required: true},
-  mW: {type: Number, required: true},
+  mW: {type: Number, required: true },
   formula: {type: String, required: true},
 });
 
-var fillElement = function (element) {
-  if (element.name) {
-    element.formula = pt.elements[element.name].symbol;
-    element.mW = Number(pt.elements[element.name].atomicMass.slice(0, -3));
-  }
-  else if (element.formula) {
-    element.name = pt.symbols[element.formula].name;
-    element.mW = Number(pt.symbols[element.formula].atomicMass.slice(0, -3));
-  } 
+var getWeight = function (formula) {
+  return Number(pt.symbols[formula].atomicMass.slice(0, -3));
 };
 
-elementSchema.pre('validate', function (next) {
-  fillElement(this);
+elementSchema.path('mW').validate(function (given) {
+  var realMW = getWeight(this.formula);
+  return Math.abs(realMW - given) < 0.1;
+})
 
-  next();
+elementSchema.virtual('name').get(function () {
+  return pt.symbols[this.formula].name;
 });
 
-elementSchema.methods.populateMW = function () {
-  return this.constructor.findOne(this._id).populate('mW');
-}
+elementSchema.pre('validate', function (next) {
+  if (this.formula && !this.mW) this.mW = getWeight(this.formula);
+  next();
+});
 
 
 var Element = mongoose.model('Element', elementSchema);

@@ -13,10 +13,7 @@ var compoundSchema = new mongoose.Schema({
         type: ObjectId, 
         ref: 'Element'
       },
-      number: {
-        value: Number,
-        units: {type: String, enum: ['M', 'mM', 'uM', 'nM', 'pM']}
-      }
+      number: Number,
     }],
     required: true
   }
@@ -26,10 +23,6 @@ function compoundMatcher(str){
   var str = str.replace(/\(/g,'').replace(/\)/g, '');
   return str.match(/[A-Z][a-z]?\d?/g);
 }
-
-var x = compoundMatcher('NaCl2');
-
-var molecularWeight = x.reduce(function())
 
 
 var Compound = mongoose.model('Compound', compoundSchema);

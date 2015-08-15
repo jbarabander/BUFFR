@@ -1,4 +1,5 @@
 var Compound = require('../models/compounds');
+var Element = require('../models/elements');
 
 var chai = require('chai');
 chai.use(require('chai-things'));
@@ -20,14 +21,42 @@ describe('Compound Model', function () {
       });
     });
 
+    it('should err if provided incorrect mW (custom validator)', function () {
+      
+      var element = new Element({
+        formula: "Na",
+        mW: 40
+      });
+      return element.validate().should.be.rejected;
+    });
+
   });
 
-  describe('Statics', function () {});
+  describe('Statics', function () {
+
+    it('should err if provided incorrect mW (custom validator)', function () {
+      
+      var element = new Element({
+        formula: "Na",
+        mW: 40
+      });
+      return element.validate().should.be.rejected;
+    });
+
+  });
 
   describe('Methods', function () {});
 
   describe('Virtuals', function () {});
 
-  describe('Hooks', function () {});
+  describe('Hooks', function () {
+
+    // it('should use pre-validation hook to generate mW from formula', function () {
+    //   var element = new Element();
+    //   element.formula = "Na";
+    //   return element.validate().should.be.fulfilled;
+    // });
+
+  });
 
 });
