@@ -3,8 +3,24 @@ var Element = require('./models/elements');
 
 
 module.exports.compoundMatcher = function (str) {
-  str = str.replace(/\(/g,'').replace(/\)/g, '');
-  return str.match(/[A-Z][a-z]?\d*/g);
+  var matchedExp = str.match(/(\(([A-Z][a-z]?\d*)+\)\d+|[A-Z][a-z]?\d*)/g);
+  var newArr = [];
+  for(var i = 0; i < matchedExp.length; i++) {
+    var x = matchedExp[i].match(/\)\d+/g);
+    if(matchedExp[i].match(/\)\d+/g)) {
+        var number = parseInt(x[0].slice(1));
+        var iArr = matchedExp[i].match(/[A-Z][a-z]?\d*/g);
+        var newElement = '';
+        for(var j = 0; j < iArr.length; j++) {
+            var y = iArr[j].match(/\d+/g);
+            newElement += y ? iArr[j].replace(parseInt(y), parseInt(y) *
+            number) : iArr[j] + number;
+        }
+        newArr.push(newElement);
+    }
+    else newArr.push(matchedExp[i]);
+  }
+  return newArr.join('');
 };
 
 module.exports.elementMatcher = function (str) {
@@ -47,14 +63,15 @@ module.exports.getNumbers = function (formula) {
 //     var elObj = {
 //       value: Element.findOne({formula: el}).exec(),
 //       number: number //number isn't defined anywhere did you mean numbers?
-//     } 
+//     }
 //     return Promise.resolve(elObj);
 //   });
 //   console.log(elArr);
 //   return Promise.all(elArr);
 // };
 
-//What do you think of this? 
+///////////////////Justin's suggestions////////////////
+// What do you think of this?
 module.exports.getElements = function (formula) {
   var elArr = compoundMatcher(formula);
   elArr = elArr.map(function (el) {
@@ -62,11 +79,18 @@ module.exports.getElements = function (formula) {
     var elObj = {
       value: Element.findOne({formula: el}).exec(),
       number: number
-    } 
+    };
     return Promise.resolve(elObj);
   });
   console.log(elArr);
-  return Promise.all(elArr);
+  return Promise.all(elArr).then(elementIdFetcher);
 };
+//Instead of building out a whole elementMatcher why not do this instead?
+function elementIdFetcher(elArr) {
+  return elArr.map(function(el) {
+    var newObj = {value: el.value._id, number: el.number};
+    return newObj;
+  });
+}
 
-
+// new regex: /(\(([A-Z][a-z]?\d*)+\)\d+|[A-Z][a-z]?\d*)/g
