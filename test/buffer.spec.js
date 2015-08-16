@@ -17,35 +17,65 @@ describe('Buffer Model', function () {
         expect(error.errors).to.have.property('volume');
       });
     });
+
+    it('should correctly set volume', function () {
+      var buffer = new Buffer();
+      console.log(buffer);
+      buffer.volume = '5 L';
+      console.log(buffer);
+      buffer.volume.value.should.equal(5);
+      buffer.volume.units.should.equal('L');
+    });
   });
 
   describe('Statics', function () {});
 
   describe('Methods', function () {
+    
     var buffer;
     beforeEach(function () {
       buffer = new Buffer();
     })
 
 
-    describe('concStrParse', function () {
+    describe('strParse', function () {
 
       it('should get the correct number', function () {
-        buffer.concStrParse('3 mM').should.have.property('value', '3');
-        buffer.concStrParse('3M').should.have.property('value', '3');
-        buffer.concStrParse('5M').should.have.property('value', '5');
+        buffer.strParse('3 mM', ['M', 'mM', 'uM', 'nM', 'pM'])
+        .should.have.property('value', 3);
+        buffer.strParse('3M', ['M', 'mM', 'uM', 'nM', 'pM'])
+        .should.have.property('value', 3);
+        buffer.strParse('5M', ['M', 'mM', 'uM', 'nM', 'pM'])
+        .should.have.property('value', 5);
       });
 
-      it('should get the correct concentration', function () {
-        buffer.concStrParse('3 mM').should.have.property('concentration', 'mM');
-        buffer.concStrParse('3M').should.have.property('concentration', 'M');
-        buffer.concStrParse('5M').should.have.property('concentration', 'M');
+      it('should get the correct concentration units', function () {
+        buffer.strParse('3 mM', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'mM');
+        buffer.strParse('3M', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'M');
+        buffer.strParse('5M', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'M');
       });
 
       it('should err with no number', function () {
-        expect(buffer.concStrParse.bind(null, 'mM')).to.throw(Error);
-        expect(buffer.concStrParse.bind(null, ' M')).to.throw(Error);
+        expect(buffer.strParse.bind(null, 'mM', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
+        expect(buffer.strParse.bind(null, ' M', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
       });
+
+      it('should err with unknown units', function () {
+        expect(buffer.strParse.bind(null, '4 mg', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
+        expect(buffer.strParse.bind(null, '8 dM', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
+      });
+
+
+    });
+
+    describe('addCompound', function () {
+
+      xit('should add to the compounds list', function () {
+        // can run with compounds
+        buffer.addCompound('NaCl', '3 M');
+        buffer.compounds.should.have.length(1);
+      });
+
 
 
     });
