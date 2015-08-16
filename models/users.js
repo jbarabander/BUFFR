@@ -15,7 +15,6 @@ var userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  buffers: {}
 });
 
 var User = mongoose.model('User', userSchema);
