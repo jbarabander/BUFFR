@@ -70,13 +70,8 @@ module.exports.getNumbers = function (formula) {
 //   return Promise.all(elArr);
 // };
 
-<<<<<<< Updated upstream
-//What do you think of this?
-=======
-
 ///////////////////Justin's suggestions////////////////
 // What do you think of this?
->>>>>>> Stashed changes
 module.exports.getElements = function (formula) {
   var elArr = compoundMatcher(formula);
   elArr = elArr.map(function (el) {
@@ -84,7 +79,7 @@ module.exports.getElements = function (formula) {
     var elObj = {
       value: Element.findOne({formula: el}).exec(),
       number: number
-    }
+    };
     return Promise.resolve(elObj);
   });
   console.log(elArr);
@@ -95,7 +90,7 @@ function elementIdFetcher(elArr) {
   return elArr.map(function(el) {
     var newObj = {value: el.value._id, number: el.number};
     return newObj;
-  })
-};
+  });
+}
 
 // new regex: /(\(([A-Z][a-z]?\d*)+\)\d+|[A-Z][a-z]?\d*)/g

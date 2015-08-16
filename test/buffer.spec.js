@@ -25,7 +25,7 @@ describe('Buffer Model', function () {
     var buffer;
     beforeEach(function () {
       buffer = new Buffer();
-    })
+    });
 
 
     describe('concStrParse', function () {
