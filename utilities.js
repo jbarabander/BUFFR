@@ -37,36 +37,36 @@ module.exports.getNumbers = function (formula) {
   });
 }
 
-module.exports.getElements = function (formula) {
-  var elArr = compoundMatcher(formula);
-  var numbers = [];
-  elArr = elArr.map(function (el) {
-    if (/\d/.test(el)) {
-      numbers.push(el.match(/\d+/)[0]);
-    } else numbers.push(1);
-    var elObj = {
-      value: Element.findOne({formula: el}).exec(),
-      number: number //number isn't defined anywhere did you mean numbers?
-    } 
-    return Promise.resolve(elObj);
-  });
-  console.log(elArr);
-  return Promise.all(elArr);
-};
-
-//What do you think of this? 
 // module.exports.getElements = function (formula) {
 //   var elArr = compoundMatcher(formula);
+//   var numbers = [];
 //   elArr = elArr.map(function (el) {
-//     var number = parseInt((el.match(/\d+/) || '1')[0]);
+//     if (/\d/.test(el)) {
+//       numbers.push(el.match(/\d+/)[0]);
+//     } else numbers.push(1);
 //     var elObj = {
 //       value: Element.findOne({formula: el}).exec(),
-//       number: number
+//       number: number //number isn't defined anywhere did you mean numbers?
 //     } 
 //     return Promise.resolve(elObj);
 //   });
 //   console.log(elArr);
 //   return Promise.all(elArr);
 // };
+
+//What do you think of this? 
+module.exports.getElements = function (formula) {
+  var elArr = compoundMatcher(formula);
+  elArr = elArr.map(function (el) {
+    var number = parseInt((el.match(/\d+/) || '1')[0]);
+    var elObj = {
+      value: Element.findOne({formula: el}).exec(),
+      number: number
+    } 
+    return Promise.resolve(elObj);
+  });
+  console.log(elArr);
+  return Promise.all(elArr);
+};
 
 
