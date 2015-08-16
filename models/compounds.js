@@ -58,8 +58,8 @@ compoundSchema.methods.getMW = function(next) {
   return this.constructor.findOne(this).populate('elements.value').exec()
   .then(function(elements) {
     return elements.reduce(function(curr, prev) {
-      return curr.value.mW * curr.number + prev.value.mW * prev.number;
-    });
+      return curr + prev.value.mW * prev.number;
+    },0);
   })
   .catch(next);  
 }; //FIXME
