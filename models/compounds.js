@@ -54,6 +54,12 @@ var getElements = function (formula) {
   return Promise.all(elArr);
 };
 
+
+// so I was just thinking about making our compound model just have one big
+// pre-validate hook, where you could just do something like new Compound({formula: 'NaCl'})
+// and then when validated, it would fill in MW, elements array, etc...
+// you can see the utility functions I'm thinking about for this with tests
+// in utilities.js
 compoundSchema.methods.getMW = function(next) {
   return this.constructor.findOne(this).populate('elements.value').exec()
   .then(function(elements) {
