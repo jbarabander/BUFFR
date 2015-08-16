@@ -46,7 +46,7 @@ var getElements = function (formula) {
     } else numbers.push(1);
     var elObj = {
       value: Element.findOne({formula: el}).exec(),
-      number: number
+      number: number 
     }
     return Promise.resolve(elObj);
   });

@@ -4,7 +4,7 @@ var Element = require('./models/elements');
 
 module.exports.compoundMatcher = function (str) {
   str = str.replace(/\(/g,'').replace(/\)/g, '');
-  return str.match(/[A-Z][a-z]?\d?/g);
+  return str.match(/[A-Z][a-z]?\d*/g);
 };
 
 module.exports.elementMatcher = function (str) {
@@ -12,7 +12,7 @@ module.exports.elementMatcher = function (str) {
   var elements = str.match(/[A-Z][a-z]?\d?/g);
   var numbers = elements.map(function (el) {
     if (/\d/.test(el)) {
-      return el.match(/\d+/)[0];
+      return parseInt(el.match(/\d+/)[0]);
     } else return 1;
   });
   var proms = elements.map(function (element) {
@@ -54,19 +54,20 @@ module.exports.getElements = function (formula) {
   return Promise.all(elArr);
 };
 
-//What do you think of this? 
-// module.exports.getElements = function (formula) {
-//   var elArr = compoundMatcher(formula);
-//   elArr = elArr.map(function (el) {
-//     var number = parseInt((el.match(/\d+/) || '1')[0]);
-//     var elObj = {
-//       value: Element.findOne({formula: el}).exec(),
-//       number: number
-//     } 
-//     return Promise.resolve(elObj);
-//   });
-//   console.log(elArr);
-//   return Promise.all(elArr);
-// };
+// What do you think of this? 
+module.exports.getElements = function (formula) {
+  var elArr = compoundMatcher(formula);
+  elArr = elArr.map(function (el) {
+    var number = parseInt((el.match(/\d+/) || '1')[0]);
+    var el = el.replace(/\d+/, '');
+    var elObj = {
+      value: Element.findOne({formula: el}).exec(),
+      number: number
+    } 
+    return Promise.resolve(elObj);
+  });
+  console.log(elArr);
+  return Promise.all(elArr);
+};
 
 
