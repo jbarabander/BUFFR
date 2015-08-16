@@ -26,7 +26,32 @@ var bufferSchema = new mongoose.Schema({
   user: {type: ObjectId, ref: 'User'}
 });
 
+var concStrParse = function (concStr) {
+  
+}
+
+bufferSchema.methods.addCompound = function (compoundStr, concStr) {
+
+};
+
 var Buffer = mongoose.model('Buffer', bufferSchema);
 
 
 module.exports = Buffer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
