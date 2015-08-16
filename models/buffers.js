@@ -26,9 +26,14 @@ var bufferSchema = new mongoose.Schema({
   user: {type: ObjectId, ref: 'User'}
 });
 
-var concStrParse = function (concStr) {
-  
+bufferSchema.methods.concStrParse = function (concStr) {
+  var number = concStr.match(/\d+/)[0];
+  if (!number) throw new Error("No number given");
+  return {value: number};
 }
+bufferSchema.methods.fn = function () {
+  throw new Error();
+};
 
 bufferSchema.methods.addCompound = function (compoundStr, concStr) {
 

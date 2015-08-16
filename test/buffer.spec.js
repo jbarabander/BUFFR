@@ -21,7 +21,36 @@ describe('Buffer Model', function () {
 
   describe('Statics', function () {});
 
-  describe('Methods', function () {});
+  describe('Methods', function () {
+    var buffer;
+    beforeEach(function () {
+      buffer = new Buffer();
+    })
+
+
+    describe('concStrParse', function () {
+
+      it('should get the correct number', function () {
+        buffer.concStrParse('3 mM').should.have.property('value', '3');
+        buffer.concStrParse('3M').should.have.property('value', '3');
+        buffer.concStrParse('5M').should.have.property('value', '5');
+      });
+
+      it('should get the correct concentration', function () {
+        buffer.concStrParse('3 mM').should.have.property('concentration', 'mM');
+        buffer.concStrParse('3M').should.have.property('concentration', 'M');
+        buffer.concStrParse('5M').should.have.property('concentration', 'M');
+      });
+
+      it('should err with no number', function () {
+        expect(buffer.concStrParse.bind(null, 'mM')).to.throw(Error);
+        expect(buffer.concStrParse.bind(null, ' M')).to.throw(Error);
+      });
+
+
+    });
+
+  });
 
   describe('Virtuals', function () {});
 

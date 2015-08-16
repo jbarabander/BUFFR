@@ -54,6 +54,7 @@ describe('Helper Functions', function () {
       })
       .then(function (el) {
         chlorineId = el._id;
+        
         // expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
         expect(elementMatcher('NaCl2')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
       });
