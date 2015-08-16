@@ -55,7 +55,7 @@ var getElements = function (formula) {
 };
 
 compoundSchema.methods.getMW = function(next) {
-  return this.constructor.find(this).populate('elements.value').exec()
+  return this.constructor.findOne(this).populate('elements.value').exec()
   .then(function(elements) {
     return elements.reduce(function(curr, prev) {
       return curr.value.mW * curr.number + prev.value.mW * prev.number;
