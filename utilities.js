@@ -3,11 +3,29 @@ var Element = require('./models/elements');
 
 
 module.exports.compoundMatcher = function (str) {
-  var str = str.replace(/\(/g,'').replace(/\)/g, '');
+  str = str.replace(/\(/g,'').replace(/\)/g, '');
   return str.match(/[A-Z][a-z]?\d?/g);
 };
 
 module.exports.elementMatcher = function (str) {
+  str = str.replace(/\(/g,'').replace(/\)/g, '');
+  var elements = str.match(/[A-Z][a-z]?\d?/g);
+  var numbers = elements.map(function (el) {
+    if (/\d/.test(el)) {
+      return el.match(/\d+/)[0];
+    } else return 1;
+  });
+  var proms = elements.map(function (element) {
+    element = element.replace(/\d+/, "");
+    return Element.findOne({formula: element});
+  });
+  return Promise.all(proms)
+  .then(function (elements) {
+    var realElArr = elements.map(function (realEl, index) {
+      return {value: realEl._id, number: numbers[index]};
+    });
+    return realElArr;
+  });
 };
 
 module.exports.getNumbers = function (formula) {

@@ -15,23 +15,23 @@ var expect = chai.expect;
 
 describe('Helper Functions', function () {
 
-  describe('compoundMatcher', function () {
+  // describe('compoundMatcher', function () {
 
-    it('should return each element in the formula correctly as objects', function () {
-      expect(compoundMatcher('NaCl')).to.deep.equal([{formula: "Na", number: 1}, {formula: "Cl", number: 1}]);
-      expect(compoundMatcher('NaCl2')).to.deep.equal([{formula: "Na", number: 1}, {formula: "Cl", number: 2}]);
-      expect(compoundMatcher('CH4')).to.deep.equal([{formula: "C", number: 1}, {formula: "H", number: 4}]);
-    })
+  //   it('should return each element in the formula correctly as objects', function () {
+  //     expect(compoundMatcher('NaCl')).to.deep.equal([{formula: "Na", number: 1}, {formula: "Cl", number: 1}]);
+  //     expect(compoundMatcher('NaCl2')).to.deep.equal([{formula: "Na", number: 1}, {formula: "Cl", number: 2}]);
+  //     expect(compoundMatcher('CH4')).to.deep.equal([{formula: "C", number: 1}, {formula: "H", number: 4}]);
+  //   })
 
-    it('should combine elements listed twice', function () {
-      expect(compoundMatcher('NaCl2Na')).to.deep.equal([{formula: "Na", number: 2}, {formula: "Cl", number: 2}]);
-    })
+  //   it('should combine elements listed twice', function () {
+  //     expect(compoundMatcher('NaCl2Na')).to.deep.equal([{formula: "Na", number: 2}, {formula: "Cl", number: 2}]);
+  //   })
 
-  })
+  // })
 
   describe('elementMatcher', function () {
     
-    xit('should return each element in the formula correctly as objects', function () {
+    it('should return each element in the formula correctly as objects', function () {
       var sodiumId, chlorineId;
       return Element.findOne({formula: 'Na'})
       .then(function (el) {
@@ -39,8 +39,23 @@ describe('Helper Functions', function () {
         return Element.findOne({formula: 'Cl'});
       })
       .then(function (el) {
-        expect(elementMatcher('NaCl')).to.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
-        expect(elementMatcher('NaCl2')).to.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
+        chlorineId = el._id;
+        expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
+        // expect(elementMatcher('NaCl2')).to.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
+      });
+    });
+
+    it('should return each element in the formula even twice correctly', function () {
+      var sodiumId, chlorineId;
+      return Element.findOne({formula: 'Na'})
+      .then(function (el) {
+        sodiumId = el._id;
+        return Element.findOne({formula: 'Cl'});
+      })
+      .then(function (el) {
+        chlorineId = el._id;
+        // expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
+        expect(elementMatcher('NaCl2')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
       });
     });
 
