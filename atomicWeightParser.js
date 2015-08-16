@@ -23,4 +23,4 @@ function atomicParse(){
   return atomicTable;
 }
 
-module.exports = atomicParse;
+module.exports.atomicParser = atomicParse;

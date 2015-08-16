@@ -14,7 +14,8 @@ var userSchema = new mongoose.Schema({
     type: String, 
     required: true,
     unique: true
-  }
+  },
+  buffers: {}
 });
 
 var User = mongoose.model('User', userSchema);

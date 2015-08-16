@@ -26,7 +26,6 @@ var bufferSchema = new mongoose.Schema({
   user: {type: ObjectId, ref: 'User'}
 });
 
-
 var Buffer = mongoose.model('Buffer', bufferSchema);
 
 

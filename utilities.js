@@ -1,12 +1,14 @@
 var Promise = require('bluebird');
 var Element = require('./models/elements');
 
+
 module.exports.compoundMatcher = function (str) {
-  str = str.replace(/\(/g,'').replace(/\)/g, '');
+  var str = str.replace(/\(/g,'').replace(/\)/g, '');
   return str.match(/[A-Z][a-z]?\d?/g);
 };
 
-module.exports.elementMatcher = function (str) {};
+module.exports.elementMatcher = function (str) {
+};
 
 module.exports.getNumbers = function (formula) {
   var elArr = compoundMatcher(formula);

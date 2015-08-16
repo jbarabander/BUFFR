@@ -4,7 +4,7 @@ var Promise = require('bluebird');
 require('./');
 var Element = require('./elements');
 
-Element.find({})
+Element.find({}) //FIXME??
 
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -53,6 +53,17 @@ var getElements = function (formula) {
   console.log(elArr);
   return Promise.all(elArr);
 };
+
+compoundSchema.methods.getMW = function(next) {
+  return this.constructor.find(this).populate('elements.value').exec()
+  .then(function(elements) {
+    return elements.reduce(function(curr, prev) {
+      return curr.value.mW * curr.number + prev.value.mW * prev.number;
+    });
+  })
+  .catch(next);  
+}; //FIXME
+
 
 compoundSchema.pre('validate', function (next) {
   if (!this.formula) return next();
