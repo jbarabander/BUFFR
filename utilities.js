@@ -73,7 +73,7 @@ module.exports.getNumbers = function (formula) {
 ///////////////////Justin's suggestions////////////////
 // What do you think of this?
 module.exports.getElements = function (formula) {
-  var elArr = compoundMatcher(formula);
+  var elArr = module.exports.compoundMatcher(formula);
   elArr = elArr.map(function (el) {
     var number = parseInt((el.match(/\d+/) || '1')[0]);
     var elObj = {
