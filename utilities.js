@@ -20,7 +20,7 @@ module.exports.compoundMatcher = function (str) {
     }
     else newArr.push(matchedExp[i]);
   }
-  return newArr.join('');
+  return newArr.join('').match(/[A-Z][a-z]?\d*/g);
 };
 
 module.exports.elementMatcher = function (str) {
@@ -51,7 +51,7 @@ module.exports.getNumbers = function (formula) {
       return el.match(/\d+/)[0];
     } else return 1;
   });
-}
+};
 
 // module.exports.getElements = function (formula) {
 //   var elArr = compoundMatcher(formula);
