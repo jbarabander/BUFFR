@@ -21,7 +21,7 @@ describe('Compound Model', function () {
     });
 
     it('should err if provided incorrect mW (custom validator)', function () {
-      
+
       var element = new Element({
         formula: "Na",
         mW: 40
@@ -34,14 +34,23 @@ describe('Compound Model', function () {
   describe('Statics', function () {
 
     xit('should correctly add elements from a formula', function () {
-      
+
       var naCl = new Compound({formula: 'NaCl'});
       return naCl.validate().should.be.fulfilled;
     });
 
   });
 
-  describe('Methods', function () {});
+  describe('Methods', function () {
+    beforeEach(function() {
+      var x = new Compound({formula: 'NaCl'});
+    })
+    describe('getElements', function() {
+      it('should properly create the elements array', function() {
+
+      });
+    });
+  });
 
   describe('Virtuals', function () {});
 

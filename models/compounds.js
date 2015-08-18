@@ -2,9 +2,11 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 var Promise = require('bluebird');
 require('./');
+var utils = require('../utilities.js');
+var compoundMatcher = utils.compoundMatcher;
 var Element = require('./elements');
 
-Element.find({}) //FIXME??
+// Element.find({}) //FIXME??
 
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -14,7 +16,7 @@ var compoundSchema = new mongoose.Schema({
   elements: {
     type: [{
       value: {
-        type: ObjectId, 
+        type: ObjectId,
         ref: 'Element'
       },
       number: Number,
@@ -22,38 +24,6 @@ var compoundSchema = new mongoose.Schema({
     required: true
   }
 });
-
-var compoundMatcher = function (str) {
-  str = str.replace(/\(/g,'').replace(/\)/g, '');
-  return str.match(/[A-Z][a-z]?\d?/g)
-};
-
-var getNumbers = function (formula) {
-  var elArr = compoundMatcher(formula);
-  return elArr.map(function (el) {
-    if (/\d/.test(el)) {
-      return el.match(/\d+/)[0];
-    } else return 1;
-  });
-}
-
-var getElements = function (formula) {
-  var elArr = compoundMatcher(formula);
-  var numbers = [];
-  elArr = elArr.map(function (el) {
-    if (/\d/.test(el)) {
-      numbers.push(el.match(/\d+/)[0]);
-    } else numbers.push(1);
-    var elObj = {
-      value: Element.findOne({formula: el}).exec(),
-      number: number 
-    }
-    return Promise.resolve(elObj);
-  });
-  console.log(elArr);
-  return Promise.all(elArr);
-};
-
 
 // so I was just thinking about making our compound model just have one big
 // pre-validate hook, where you could just do something like new Compound({formula: 'NaCl'})
@@ -67,16 +37,29 @@ compoundSchema.methods.getMW = function(next) {
       return curr + prev.value.mW * prev.number;
     },0);
   })
-  .catch(next);  
+  .catch(next);
 }; //FIXME
+
+compoundSchema.methods.getElements = function () {
+  var elArr = compoundMatcher(this.formula);
+  var promArr = [];
+  elArr.forEach(function (el) {
+    var number = parseInt((el.match(/\d+/) || '1')[0]);
+    var elStripped = el.replace(/\d+/, '');
+
+    promArr.push(findOne({formula: elStripped}).exec().then(function(element) {
+      return {value: element._id, number: number});
+    });
+  });
+  Promise.all(promArr).then(function(elements) {
+    this.elements = elements;
+  });
+};
 
 
 compoundSchema.pre('validate', function (next) {
   if (!this.formula) return next();
-  getElements(this.formula)
-  .then(function (realElArr) {
-    this.elements = realElArr;
-  }).catch(next);
+  this.getElements().catch(next);
 });
 
 

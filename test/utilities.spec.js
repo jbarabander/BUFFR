@@ -29,8 +29,25 @@ describe('Helper Functions', function () {
 
   // })
 
+  describe('compoundMatcher', function() {
+    it('should parse a simple formula into an array of its respective elements', function() {
+      var parseExample = 'NaCl2Hg';
+      expect(compoundMatcher(parseExample)).to.deep.equal(['Na', 'Cl2','Hg']);
+    });
+    it('should parse a formula with parentheses into the correct array ', function() {
+      var parseExample = 'NaCl2Hg(Cu2)3';
+      expect(compoundMatcher(parseExample)).to.deep.equal(['Na', 'Cl2', 'Hg', 'Cu6']);
+    });
+    it('should parse a formula with multiple parens correctly', function() {
+      var parseExample = '(NaCl2)2Be2(H2O)4(K)';
+      expect(compoundMatcher(parseExample)).to.deep.equal(['Na2', 'Cl4', 'Be2', 'H8', 'O4','K']);
+    });
+  });
+
+
+
   describe('elementMatcher', function () {
-    
+
     it('should return each element in the formula correctly as objects', function () {
       var sodiumId, chlorineId;
       return Element.findOne({formula: 'Na'})
@@ -40,6 +57,7 @@ describe('Helper Functions', function () {
       })
       .then(function (el) {
         chlorineId = el._id;
+
         expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
         // expect(elementMatcher('NaCl2')).to.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
       });
@@ -54,7 +72,7 @@ describe('Helper Functions', function () {
       })
       .then(function (el) {
         chlorineId = el._id;
-        
+
         // expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
         expect(elementMatcher('NaCl2')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
       });
@@ -70,7 +88,7 @@ describe('Helper Functions', function () {
       .then(function (el) {
         hydroId = el._id;
         expect(elementMatcher('CHC')).to.deep.equal([
-          {value: carbonId, number: 2}, 
+          {value: carbonId, number: 2},
           {value: hydroId, number: 1}
         ]);
       });
@@ -90,5 +108,5 @@ describe('Helper Functions', function () {
     });
 
   });
-  
+
 });
