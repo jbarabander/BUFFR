@@ -42,13 +42,30 @@ describe('Compound Model', function () {
   });
 
   describe('Methods', function () {
+
     beforeEach(function() {
       var x = new Compound({formula: 'NaCl'});
-    })
+    });
+
     describe('getElements', function() {
       it('should properly create the elements array', function() {
 
       });
+    });
+
+    describe('measureAmount', function () {
+
+      it('should return correct quantity in grams', function () {
+        var cpd = new Compound({mW: 58.44});
+        cpd.measureAmount(1, 1).should.equal(58.44);
+      });
+
+      it('should err without arguments', function () {
+        var cpd = new Compound({mW: 58.44});
+        expect(cpd.measureAmount).to.throw;
+      });
+
+
     });
   });
 

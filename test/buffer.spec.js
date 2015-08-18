@@ -1,4 +1,6 @@
 var Buffer = require('../models/buffers');
+var Compound = require('../models/compounds');
+var Element = require('../models/elements');
 
 var chai = require('chai');
 chai.use(require('chai-things'));
@@ -80,6 +82,43 @@ describe('Buffer Model', function () {
         // can run with compounds
         buffer.addCompound('NaCl', '3 M');
         buffer.compounds.should.have.length(1);
+      });
+
+
+
+    });
+
+    describe('storeAmounts', function () {
+
+      it('should add an amount property to the compound buffer object', function () {
+        var sodId, clId;
+        return Element.findOne({formula: "Na"})
+        .then(function (el) {
+          sodId = el._id;
+          return Element.findOne({formula: "Cl"});
+        })
+        .then(function (el) {
+          clId = el._id;
+          return Compound.create({
+            formula: "NaCl",
+            mW: 58.44,
+            elements: [
+              {value: sodId, number: 1},
+              {value: clId, number: 1}
+            ]
+          });
+        })
+        .then(function (cpd) {
+          buffer.compounds.push({value: cpd._id, concentration: {value: 1, units: 'M'}});
+          buffer.volume = '1 L'
+          return buffer.save();  
+        })
+        .then(function (buffer) {
+          return buffer.storeAmounts();
+        })
+        .then(function () {
+          expect(buffer.compounds[0].amount).to.equal(58.44);
+        })
       });
 
 
