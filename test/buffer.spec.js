@@ -20,15 +20,51 @@ describe('Buffer Model', function () {
 
     it('should correctly set volume', function () {
       var buffer = new Buffer();
-      console.log(buffer);
       buffer.volume = '5 L';
-      console.log(buffer);
       buffer.volume.value.should.equal(5);
       buffer.volume.units.should.equal('L');
     });
+
+    it('getting volume should output number of liters', function () {
+      var buffer = new Buffer();
+      buffer.volume = '5 mL';
+      buffer.liters.should.equal(0.005);
+    });
+
   });
 
-  describe('Statics', function () {});
+  describe('Statics', function () {
+
+    describe('strParse', function () {
+
+      it('should get the correct number', function () {
+        Buffer.strParse('3 mM', ['M', 'mM', 'uM', 'nM', 'pM'])
+        .should.have.property('value', 3);
+        Buffer.strParse('3M', ['M', 'mM', 'uM', 'nM', 'pM'])
+        .should.have.property('value', 3);
+        Buffer.strParse('5M', ['M', 'mM', 'uM', 'nM', 'pM'])
+        .should.have.property('value', 5);
+      });
+
+      it('should get the correct concentration units', function () {
+        Buffer.strParse('3 mM', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'mM');
+        Buffer.strParse('3M', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'M');
+        Buffer.strParse('5M', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'M');
+      });
+
+      it('should err with no number', function () {
+        expect(Buffer.strParse.bind(null, 'mM', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
+        expect(Buffer.strParse.bind(null, ' M', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
+      });
+
+      it('should err with unknown units', function () {
+        expect(Buffer.strParse.bind(null, '4 mg', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
+        expect(Buffer.strParse.bind(null, '8 dM', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
+      });
+
+    });
+
+  });
 
   describe('Methods', function () {
     
@@ -37,36 +73,6 @@ describe('Buffer Model', function () {
       buffer = new Buffer();
     });
 
-
-    describe('strParse', function () {
-
-      it('should get the correct number', function () {
-        buffer.strParse('3 mM', ['M', 'mM', 'uM', 'nM', 'pM'])
-        .should.have.property('value', 3);
-        buffer.strParse('3M', ['M', 'mM', 'uM', 'nM', 'pM'])
-        .should.have.property('value', 3);
-        buffer.strParse('5M', ['M', 'mM', 'uM', 'nM', 'pM'])
-        .should.have.property('value', 5);
-      });
-
-      it('should get the correct concentration units', function () {
-        buffer.strParse('3 mM', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'mM');
-        buffer.strParse('3M', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'M');
-        buffer.strParse('5M', ['M', 'mM', 'uM', 'nM', 'pM']).should.have.property('units', 'M');
-      });
-
-      it('should err with no number', function () {
-        expect(buffer.strParse.bind(null, 'mM', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
-        expect(buffer.strParse.bind(null, ' M', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
-      });
-
-      it('should err with unknown units', function () {
-        expect(buffer.strParse.bind(null, '4 mg', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
-        expect(buffer.strParse.bind(null, '8 dM', ['M', 'mM', 'uM', 'nM', 'pM'])).to.throw(Error);
-      });
-
-
-    });
 
     describe('addCompound', function () {
 

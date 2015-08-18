@@ -6,8 +6,6 @@ var utils = require('../utilities.js');
 var compoundMatcher = utils.compoundMatcher;
 var Element = require('./elements');
 
-// Element.find({}) //FIXME??
-
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var compoundSchema = new mongoose.Schema({
@@ -48,8 +46,8 @@ compoundSchema.methods.getElements = function () {
     var elStripped = el.replace(/\d+/, '');
 
     promArr.push(findOne({formula: elStripped}).exec().then(function(element) {
-      return {value: element._id, number: number});
-    });
+      return {value: element._id, number: number};
+    }));
   });
   Promise.all(promArr).then(function(elements) {
     this.elements = elements;

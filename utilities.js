@@ -55,9 +55,14 @@ getNumbers = function (formula) {
 
 ///////////////////Justin's suggestions////////////////
 // What do you think of this?
+<<<<<<< HEAD
 getElements = function (formula) {
   var self = this;
   var elArr = compoundMatcher(formula);
+=======
+module.exports.getElements = function (formula) {
+  var elArr = module.exports.compoundMatcher(formula);
+>>>>>>> 3a9a9a501c71f328d01307d812c69b543626bf33
   elArr = elArr.map(function (el) {
     var number = parseInt((el.match(/\d+/) || '1')[0]);
     var elStripped = el.replace(/\d+/, '');
