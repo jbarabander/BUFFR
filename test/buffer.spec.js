@@ -104,6 +104,7 @@ describe('Buffer Model', function () {
           return buffer.storeAmounts();
         })
         .then(function () {
+          console.log(buffer);
           expect(buffer.compounds[0].amount).to.be.closeTo(58.44, 0.1);
         })
       });

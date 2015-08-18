@@ -86,10 +86,11 @@ compoundSchema.pre('validate', function (next) {
   if (this.formula && this.elements && this.mW) return next(); // to check if these are already done
   var self = this;
   this.getElements().then(function (stuff) {
-    return self.getMW()
+    return self.getMW();
   })
   .then(function (number) {
     self.mW = number;
+    console.log(self);
     next();
   });
 });
