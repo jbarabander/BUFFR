@@ -33,7 +33,7 @@ describe('Compound Model', function () {
 
   describe('Statics', function () {
 
-    xit('should correctly add elements from a formula', function () {
+    it('should correctly add elements from a formula', function () {
 
       var naCl = new Compound({formula: 'NaCl'});
       return naCl.validate().should.be.fulfilled;
@@ -42,15 +42,55 @@ describe('Compound Model', function () {
   });
 
   describe('Methods', function () {
+    
+    var x;
 
     beforeEach(function() {
-      var x = new Compound({formula: 'NaCl'});
+      x = new Compound({formula: 'NaCl'});
     });
 
     describe('getElements', function() {
-      it('should properly create the elements array', function() {
 
+      it('should properly create the elements array', function () {
+        var sodiumId, chlorineId;
+        return Element.findOne({formula: 'Na'})
+        .then(function (el) {
+          sodiumId = el._id;
+          return Element.findOne({formula: 'Cl'});
+        })
+        .then(function (el) {
+          chlorineId = el._id;
+          return x.getElements();
+        })
+        .then(function (compound) {
+          expect(compound.elements[0].value.toString()).to.equal(sodiumId.toString());
+          expect(compound.elements[1].value.toString()).to.equal(chlorineId.toString());
+        });
       });
+
+    });
+
+    describe('getMW', function() {
+
+      it('should get molecular weight from an elements array', function () {
+        var sodiumId, chlorineId;
+        return Element.findOne({formula: 'Na'})
+        .then(function (el) {
+          sodiumId = el._id;
+          return Element.findOne({formula: 'Cl'});
+        })
+        .then(function (el) {
+          chlorineId = el._id;
+          return x.getElements();
+        })
+        .then(function (compound) {
+          return compound.getMW();
+        })
+        .then(function (number) {
+          expect(number).to.be.closeTo(58.44, .1);
+        });
+      });
+
     });
 
     describe('measureAmount', function () {

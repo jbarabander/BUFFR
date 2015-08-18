@@ -46,68 +46,68 @@ describe('Helper Functions', function () {
 
 
 
-  describe('elementMatcher', function () {
-    it('should return each element in the formula correctly as objects', function () {
-      var sodiumId, chlorineId;
-      return Element.findOne({formula: 'Na'})
-      .then(function (el) {
-        sodiumId = el._id;
-        return Element.findOne({formula: 'Cl'});
-      })
-      .then(function (el) {
-        chlorineId = el._id;
+  // describe('elementMatcher', function () {
+  //   xit('should return each element in the formula correctly as objects', function () {
+  //     var sodiumId, chlorineId;
+  //     return Element.findOne({formula: 'Na'})
+  //     .then(function (el) {
+  //       sodiumId = el._id;
+  //       return Element.findOne({formula: 'Cl'});
+  //     })
+  //     .then(function (el) {
+  //       chlorineId = el._id;
 
-        expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
-        // expect(elementMatcher('NaCl2')).to.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
-      });
-    });
+  //       expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
+  //       // expect(elementMatcher('NaCl2')).to.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
+  //     });
+  //   });
 
-    xit('should return each element in the formula even twice correctly', function () {
-      var sodiumId, chlorineId;
-      return Element.findOne({formula: 'Na'})
-      .then(function (el) {
-        sodiumId = el._id;
-        return Element.findOne({formula: 'Cl'});
-      })
-      .then(function (el) {
-        chlorineId = el._id;
+  //   xit('should return each element in the formula even twice correctly', function () {
+  //     var sodiumId, chlorineId;
+  //     return Element.findOne({formula: 'Na'})
+  //     .then(function (el) {
+  //       sodiumId = el._id;
+  //       return Element.findOne({formula: 'Cl'});
+  //     })
+  //     .then(function (el) {
+  //       chlorineId = el._id;
 
-        // expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
-        expect(elementMatcher('NaCl2')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
-      });
-    });
+  //       // expect(elementMatcher('NaCl')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 1}]);
+  //       expect(elementMatcher('NaCl2')).to.eventually.deep.equal([{value: sodiumId, number: 1}, {value: chlorineId, number: 2}]);
+  //     });
+  //   });
 
-    xit('should combine elements listed twice', function () {
-      var hydroId, carbonId;
-      return Element.findOne({formula: 'C'})
-      .then(function (el) {
-        carbonId = el._id;
-        return Element.findOne({formula: 'H'});
-      })
-      .then(function (el) {
-        hydroId = el._id;
-        elementMatcher('CHC').then(console.log.bind(console));
-        expect(elementMatcher('CHC')).to.eventually.deep.equal([
-          {value: carbonId, number: 2},
-          {value: hydroId, number: 1}
-        ]);
-      });
-    });
+  //   xit('should combine elements listed twice', function () {
+  //     var hydroId, carbonId;
+  //     return Element.findOne({formula: 'C'})
+  //     .then(function (el) {
+  //       carbonId = el._id;
+  //       return Element.findOne({formula: 'H'});
+  //     })
+  //     .then(function (el) {
+  //       hydroId = el._id;
+  //       elementMatcher('CHC').then(console.log.bind(console));
+  //       expect(elementMatcher('CHC')).to.eventually.deep.equal([
+  //         {value: carbonId, number: 2},
+  //         {value: hydroId, number: 1}
+  //       ]);
+  //     });
+  //   });
 
-    xit('should use parentheses to double the stuff inside', function () {
-      var hydroId, carbonId;
-      return Element.findOne({formula: 'C'})
-      .then(function (el) {
-        carbonId = el._id;
-        return Element.findOne({formula: 'H'});
-      })
-      .then(function (el) {
-        hydroId = el._id;
-        getElements('CH3CH4(CH3)2').then(console.log.bind(console));
-        expect(getElements('CH3CH4(CH3)2')).to.eventually.deep.equal([{value: carbonId, number: 4}, {value: hydroId, number: 13}]);
-      });
-    });
+  //   xit('should use parentheses to double the stuff inside', function () {
+  //     var hydroId, carbonId;
+  //     return Element.findOne({formula: 'C'})
+  //     .then(function (el) {
+  //       carbonId = el._id;
+  //       return Element.findOne({formula: 'H'});
+  //     })
+  //     .then(function (el) {
+  //       hydroId = el._id;
+  //       getElements('CH3CH4(CH3)2').then(console.log.bind(console));
+  //       expect(getElements('CH3CH4(CH3)2')).to.eventually.deep.equal([{value: carbonId, number: 4}, {value: hydroId, number: 13}]);
+  //     });
+  //   });
 
-  });
+  // });
 
 });

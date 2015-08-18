@@ -25,7 +25,8 @@ var bufferSchema = new mongoose.Schema({
     concentration: {
       value: Number,
       units: {type: String, enum: ['M', 'mM', 'uM', 'nM', 'pM']}
-    }
+    },
+    amount: Number
   }],
   user: {type: ObjectId, ref: 'User'}
 });
@@ -78,8 +79,8 @@ bufferSchema.statics.strParse = function (str, possibles) {
 };
 
 
-bufferSchema.methods.addCompound = function (compoundStr, str) {
-  var concentration = this.strParse(str, ['M', 'mM', 'uM', 'nM', 'pM']);
+bufferSchema.methods.addCompound = function (compoundStr, concStr) {
+  var concentration = this.constructor.strParse(concStr, ['M', 'mM', 'uM', 'nM', 'pM']);
   var self = this;
   return Compound.create({formula: compoundStr})
   .then(function (compound) {
@@ -93,16 +94,16 @@ bufferSchema.methods.storeAmounts = function () {
   var self = this;
   return new Promise(function (resolve, reject) {
     self.deepPopulate('compounds.value', function (err, buffer) {
-      if (err) throw reject(err);
+      if (err) return reject(err);
       var cpdsMolarConc = buffer.cpdsMolarConc;
       buffer.compounds.forEach(function (compoundConcObj, index) {
         var cpd = compoundConcObj.value;
         var conc = cpdsMolarConc[index];
         compoundConcObj.amount = cpd.measureAmount(conc, self.liters);
       });
-      resolve();
+      resolve(buffer);
     });
-  });
+  }).catch(function (err) { throw err; })
 };
 
 var Buffer = mongoose.model('Buffer', bufferSchema);

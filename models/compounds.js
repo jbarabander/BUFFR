@@ -42,29 +42,36 @@ compoundSchema.plugin(deepPopulate);
 // and then when validated, it would fill in MW, elements array, etc...
 // you can see the utility functions I'm thinking about for this with tests
 // in utilities.js
-compoundSchema.methods.getMW = function(next) {
-  return this.constructor.findOne(this).populate('elements.value').exec()
-  .then(function(elements) {
-    return elements.reduce(function(curr, prev) {
-      return curr + prev.value.mW * prev.number;
-    },0);
+compoundSchema.methods.getMW = function() {
+  var self = this;
+  return new Promise(function (resolve, reject) {
+    self.deepPopulate('elements.value', function (err, cpd) {
+      if (err) return reject(err);
+      resolve(cpd);
+    });
   })
-  .catch(next);
-}; //FIXME
+  .then(function(cpd) {
+    return cpd.elements.reduce(function(curr, prev) {
+      return curr + prev.value.mW * prev.number;
+    }, 0);
+  });
+};
 
 compoundSchema.methods.getElements = function () {
+  var self = this;
   var elArr = compoundMatcher(this.formula);
   var promArr = [];
   elArr.forEach(function (el) {
     var number = parseInt((el.match(/\d+/) || '1')[0]);
     var elStripped = el.replace(/\d+/, '');
 
-    promArr.push(findOne({formula: elStripped}).exec().then(function(element) {
+    promArr.push(Element.findOne({formula: elStripped}).exec().then(function(element) {
       return {value: element._id, number: number};
     }));
   });
-  Promise.all(promArr).then(function(elements) {
-    this.elements = elements;
+  return Promise.all(promArr).then(function(elements) {
+    self.elements = elements;
+    return self;
   });
 };
 
@@ -77,7 +84,14 @@ compoundSchema.methods.measureAmount = function (concentration, volume) {
 compoundSchema.pre('validate', function (next) {
   if (!this.formula) return next();
   if (this.formula && this.elements && this.mW) return next(); // to check if these are already done
-  this.getElements().catch(next);
+  var self = this;
+  this.getElements().then(function (stuff) {
+    return self.getMW()
+  })
+  .then(function (number) {
+    self.mW = number;
+    next();
+  });
 });
 
 
