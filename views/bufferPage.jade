@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  .container
+    h4= buffer.nameify
+    ul
+      each compound in buffer.compounds
+        li #{compound.amount} grams of #{compound.nameify}
+    form(action="/buffers/#{buffer._id}", method="post")
+      .form-group
+        label(for="compound") compound formula
+        input(id="compound", type="text", name="compound").form-control
+      button(type="submit").btn.btn-success.form-control Submit

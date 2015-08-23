@@ -5,10 +5,10 @@ var Element = require('../models/elements');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  Element.find()
+  Buffer.find()
   .then(function (buffers) {
     res.render('index', { title: 'BUFFR', buffers: buffers });
-  })
+  });
 });
 
 module.exports = router;

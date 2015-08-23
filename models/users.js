@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 var Buffer = require('./buffers');
+var Promise = require('bluebird');
 
 var userSchema = new mongoose.Schema({
   username: {type: String, required: true, unique: true},
@@ -16,20 +17,15 @@ var userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  buffers: [Buffer.schema]
+  buffers: [Object]
 });
 
 userSchema.methods.addBuffer = function (buffer) {
   var self = this;
-  return new Promise(function (resolve, reject) {
-    buffer.deepPopulate('compounds.value', function(err, buffer) {
-      if (err) reject(err);
-      resolve(buffer);
-    });
-  })
-  .then(function (buffer) {
-    self.buffers.push(buffer);
-  });
+  console.log(self);
+  self.buffers.push(buffer);
+  return self.save()
+  .then(null, function (err) { console.log(err); });
 };
 
 
