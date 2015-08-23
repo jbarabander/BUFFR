@@ -18,16 +18,14 @@ var bufferSchema = new mongoose.Schema({
     required: true
   },
   compounds: [{
-    value: {
-      type: ObjectId, 
-      ref: 'Compound'
-    },
+    value: [Compound.schema],
     concentration: {
       value: Number,
       units: {type: String, enum: ['M', 'mM', 'uM', 'nM', 'pM']}
     },
     amount: Number
   }],
+  name: String,
   user: {type: ObjectId, ref: 'User'}
 });
 
@@ -52,6 +50,18 @@ bufferSchema.virtual('cpdsMolarConc').get(function () {
     var units = compoundConcObj.concentration.units;
     return self.constructor.CONC_CONVERSION[units] * Number(value);
   });
+});
+
+bufferSchema.virtual('nameify').get(function () {
+  if (this.name) return this.name;
+  var self = this;
+  return this.compounds.reduce(function (name, cpd) {
+    cpdVal = cpd.value[0];
+    var namePart = cpd.concentration.value.toString() + ' ' + cpd.concentration.units;
+    namePart += ' ' + cpdVal.formula;
+    name.push(namePart);
+    return name;
+  }, []).join(', ');
 });
 
 bufferSchema.virtual('milliliters').get(function () {
@@ -84,7 +94,7 @@ bufferSchema.methods.addCompound = function (compoundStr, concStr) {
   var self = this;
   return Compound.create({formula: compoundStr})
   .then(function (compound) {
-    var compObj = {value: compound._id, concentration: concentration};
+    var compObj = {value: compound, concentration: concentration};
     self.compounds.push(compObj);
     return compObj;
   }); 
@@ -92,18 +102,22 @@ bufferSchema.methods.addCompound = function (compoundStr, concStr) {
 
 bufferSchema.methods.storeAmounts = function () {
   var self = this;
+  var cpdsMolarConc = this.cpdsMolarConc;
+  this.compounds.forEach(function (compoundConcObj, index) {
+    var cpd = compoundConcObj.value[0];
+    var conc = cpdsMolarConc[index];
+    compoundConcObj.amount = cpd.measureAmount(conc, self.liters);
+  });
+};
+
+bufferSchema.methods.populateCompounds = function () {
+  var self = this;
   return new Promise(function (resolve, reject) {
     self.deepPopulate('compounds.value', function (err, buffer) {
-      if (err) return reject(err);
-      var cpdsMolarConc = buffer.cpdsMolarConc;
-      buffer.compounds.forEach(function (compoundConcObj, index) {
-        var cpd = compoundConcObj.value;
-        var conc = cpdsMolarConc[index];
-        compoundConcObj.amount = cpd.measureAmount(conc, self.liters);
-      });
+      if (err) reject(err);
       resolve(buffer);
     });
-  }).catch(function (err) { throw err; })
+  });
 };
 
 var Buffer = mongoose.model('Buffer', bufferSchema);

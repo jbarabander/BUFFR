@@ -36,7 +36,11 @@ describe('Compound Model', function () {
     it('should correctly add elements from a formula', function () {
 
       var naCl = new Compound({formula: 'NaCl'});
-      return naCl.validate().should.be.fulfilled;
+      var aceticAcid = new Compound({formula: 'C2H4O2'});
+      return naCl.validate().should.be.fulfilled
+      .then(function () {
+        return aceticAcid.validate().should.be.fulfilled;
+      });
     });
 
   });
@@ -88,6 +92,36 @@ describe('Compound Model', function () {
         })
         .then(function (number) {
           expect(number).to.be.closeTo(58.44, .1);
+        });
+      });
+
+      it('should get molecular weight from a complicated array of elements', function () {
+        return Compound.create({formula: 'C2H4O2'})
+        .then(function (cpd) {
+          return cpd.getMW();
+        })
+        .then(function (number) {
+          expect(number).to.be.closeTo(60.05, 0.1);
+        });
+      });
+
+      it('should get molecular weight from an array of elements with parentheses', function () {
+        return Compound.create({formula: '(C2H4)O2'})
+        .then(function (cpd) {
+          return cpd.getMW();
+        })
+        .then(function (number) {
+          expect(number).to.be.closeTo(60.05, 0.1);
+        });
+      });
+
+      it('should get molecular weight from an array of elements with multiplied parentheses', function () {
+        return Compound.create({formula: '(CH2)2O2'})
+        .then(function (cpd) {
+          return cpd.getMW();
+        })
+        .then(function (number) {
+          expect(number).to.be.closeTo(60.05, 0.1);
         });
       });
 

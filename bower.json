@@ -1,0 +1,25 @@
+{
+  "name": "BUFFR",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jbarabander/BUFFR",
+  "authors": [
+    "Sean Johnston <sean.johnst@gmail.com>"
+  ],
+  "description": "An app to simplify buffer-making for biochemists.",
+  "main": "app.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "biochemistry",
+    "buffer"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

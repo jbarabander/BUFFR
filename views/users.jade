@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .container
+    h1 Current Users
+    br
+    h3 Here are the buffers that have already been made:
+    ul
+      each user in users
+        li= user.name.first + " " + user.name.last
+    a(href="users/add").btn.btn-success Click here to make an account.
+    a(href="#").btn.btn-warning Click here to make a buffer without an account.

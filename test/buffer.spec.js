@@ -83,6 +83,7 @@ describe('Buffer Model', function () {
         buffer.addCompound('NaCl', '3 M')
         .then(function () {
           buffer.compounds.should.have.length(1);
+          expect(buffer.compounds[0][0].formula).to.equal('NaCl');
         });
         
       });
@@ -104,7 +105,6 @@ describe('Buffer Model', function () {
           return buffer.storeAmounts();
         })
         .then(function () {
-          console.log(buffer);
           expect(buffer.compounds[0].amount).to.be.closeTo(58.44, 0.1);
         })
       });
@@ -115,7 +115,30 @@ describe('Buffer Model', function () {
 
   });
 
-  describe('Virtuals', function () {});
+  describe('Virtuals', function () {
+
+    describe('nameify', function () {
+
+      it('if it has a name, buffer.nameify is the name', function () {
+        var buffer = new Buffer({name: 'PBS'});
+        expect(buffer.nameify).to.equal('PBS');
+      });
+
+      it('if it doesn\'t have a name, buffer.nameify is the list of compounds', function () {
+        var buffer = new Buffer();
+        return buffer.addCompound('NaCl', '3 M')
+        .then(function () {
+          return buffer.addCompound('C2H4O2', '1 mM');
+        })
+        .then(function () {
+          // console.log(buffer.nameify);
+          expect(buffer.nameify).to.equal('3 M NaCl, 1 mM C2H4O2');
+        });
+      });
+
+    });
+
+  });
 
   describe('Hooks', function () {});
 

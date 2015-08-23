@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "export BUFFR_DB=buffr; nodemon -e html,js,css ./bin/www",
+    "start": "export BUFFR_DB=buffr; nodemon -e html,js,scss ./bin/www",
     "test": "export BUFFR_DB=buffrtest; nodemon ./node_modules/.bin/mocha"
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "mongoose": "^4.1.2",
     "mongoose-deep-populate": "^2.0.0",
     "morgan": "~1.6.1",
+    "node-sass-middleware": "^0.9.0",
     "periodic-table": "0.0.1",
     "serve-favicon": "~2.3.0",
     "supertest": "^1.0.1"

@@ -1,0 +1,1 @@
+include possible locations of compounds for users/pictures/appearances

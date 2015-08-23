@@ -90,7 +90,6 @@ compoundSchema.pre('validate', function (next) {
   })
   .then(function (number) {
     self.mW = number;
-    console.log(self);
     next();
   });
 });
