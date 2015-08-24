@@ -31,7 +31,7 @@ var compoundSchema = new mongoose.Schema({
 
 compoundSchema.plugin(deepPopulate);
 
-//how to use: 
+//how to use:
 // cpd.deepPopulate('elements.value', function (err, stuff) {
 //   if (err) throw err;
 //   console.log(JSON.stringify(stuff, null, 2));
