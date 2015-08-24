@@ -7,6 +7,8 @@ var Element = require('../models/elements');
 router.get('/', function(req, res, next) {
   Buffer.find()
   .then(function (buffers) {
+    // buffers.map...
+
     res.render('index', { title: 'BUFFR', buffers: buffers });
   });
 });

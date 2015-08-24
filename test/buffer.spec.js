@@ -98,10 +98,7 @@ describe('Buffer Model', function () {
         var buffer = new Buffer();
         buffer.volume = '1 L';
         return buffer.addCompound('NaCl', '1 M')
-        .then(function (cpd) {
-          return buffer.save();  
-        })
-        .then(function () {
+        .then(function (buffer) {
           return buffer.storeAmounts();
         })
         .then(function () {
@@ -124,17 +121,17 @@ describe('Buffer Model', function () {
         expect(buffer.nameify).to.equal('PBS');
       });
 
-      it('if it doesn\'t have a name, buffer.nameify is the list of compounds', function () {
-        var buffer = new Buffer();
-        return buffer.addCompound('NaCl', '3 M')
-        .then(function () {
-          return buffer.addCompound('C2H4O2', '1 mM');
-        })
-        .then(function () {
-          // console.log(buffer.nameify);
-          expect(buffer.nameify).to.equal('3 M NaCl, 1 mM C2H4O2');
-        });
-      });
+      // it('if it doesn\'t have a name, buffer.nameify is the list of compounds', function () {
+      //   var buffer = new Buffer();
+      //   return buffer.addCompound('NaCl', '3 M')
+      //   .then(function () {
+      //     return buffer.addCompound('C2H4O2', '1 mM');
+      //   })
+      //   .then(function () {
+      //     // console.log(buffer.nameify);
+      //     expect(buffer.nameify).to.equal('3 M NaCl, 1 mM C2H4O2');
+      //   });
+      // });
 
     });
 

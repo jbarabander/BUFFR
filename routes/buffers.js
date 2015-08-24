@@ -51,5 +51,12 @@ router.get('/:bufferId', function (req, res, next) {
   res.render('bufferPage', {buffer: req.buffer});
 });
 
+router.post('/:bufferId', function (req, res, next) {
+  req.buffer.addCompound(req.body.compound, req.body.concentration)
+  .then(function () {
+    res.redirect('/buffers/' + req.params.bufferId);
+  });
+});
+
 
 module.exports = router;

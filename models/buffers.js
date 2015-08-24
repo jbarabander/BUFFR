@@ -18,7 +18,7 @@ var bufferSchema = new mongoose.Schema({
     required: true
   },
   compounds: [{
-    value: [Compound.schema],
+    value: {type:ObjectId, ref: 'Compound' },
     concentration: {
       value: Number,
       units: {type: String, enum: ['M', 'mM', 'uM', 'nM', 'pM']}
@@ -96,17 +96,20 @@ bufferSchema.methods.addCompound = function (compoundStr, concStr) {
   .then(function (compound) {
     var compObj = {value: compound, concentration: concentration};
     self.compounds.push(compObj);
-    return compObj;
-  }); 
+    return self.save();
+  });
 };
 
 bufferSchema.methods.storeAmounts = function () {
   var self = this;
   var cpdsMolarConc = this.cpdsMolarConc;
-  this.compounds.forEach(function (compoundConcObj, index) {
-    var cpd = compoundConcObj.value[0];
-    var conc = cpdsMolarConc[index];
-    compoundConcObj.amount = cpd.measureAmount(conc, self.liters);
+  return this.populateCompounds()
+  .then(function (buffer) {
+    buffer.compounds.forEach(function (compoundConcObj, index) {
+      var cpd = compoundConcObj.value;
+      var conc = cpdsMolarConc[index];
+      compoundConcObj.amount = cpd.measureAmount(conc, self.liters);
+    });
   });
 };
 
