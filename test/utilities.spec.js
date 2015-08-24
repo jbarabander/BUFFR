@@ -42,6 +42,10 @@ describe('Helper Functions', function () {
       var parseExample = '(NaCl2)2Be2(H2O)4(K)';
       expect(compoundMatcher(parseExample)).to.deep.equal(['Na2', 'Cl4', 'Be2', 'H8', 'O4','K']);
     });
+    it('should parse a formula with nested parens', function() {
+      var parseExample = '{(Na[Cl2]5)3}2';
+      expect(compoundMatcher(parseExample)).to.deep.equal(['Na6', 'Cl60'])
+    })
   });
 
 

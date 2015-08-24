@@ -11,5 +11,5 @@ block content
     h3 Here are the buffers that have already been made:
     ul
       each buffer in buffers
-        li
-            a(href="/buffers/#{buffer._id}")= buffer.nameify || "no name found"
+        if buffer.name li = buffer.name
+        else buffer

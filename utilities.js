@@ -3,25 +3,58 @@ var Element = require('./models/elements');
 
 
 compoundMatcher = function (str) {
-  var matchedExp = str.match(/(\(([A-Z][a-z]?\d*)+\)\d+|[A-Z][a-z]?\d*)/g);
-  var newArr = [];
-  for(var i = 0; i < matchedExp.length; i++) {
-    var x = matchedExp[i].match(/\)\d+/g);
-    if(matchedExp[i].match(/\)\d+/g)) {
-        var number = parseInt(x[0].slice(1));
-        var iArr = matchedExp[i].match(/[A-Z][a-z]?\d*/g);
-        var newElement = '';
-        for(var j = 0; j < iArr.length; j++) {
-            var y = iArr[j].match(/\d+/g);
-            newElement += y ? iArr[j].replace(parseInt(y), parseInt(y) *
-            number) : iArr[j] + number;
-        }
-        newArr.push(newElement);
-    }
-    else newArr.push(matchedExp[i]);
-  }
-  return newArr.join('').match(/[A-Z][a-z]?\d*/g);
+  var formula = formulaParser(str);
+  return Object.keys(formula).map(function(element) {
+    if(formula[element] === 1) return element;
+    return element + formula[element];
+  });
 };
+
+
+function formulaParser(formula) {
+    formula = simplify(formula);
+    return objectComposer(formula);
+ }
+
+
+function simplify(formula) {
+    var regEx = /(\(([A-Z][a-z]?\d*)+\)\d*|\[([A-Z][a-z]?\d*)+\]\d*|\{([A-Z][a-z]?\d*)+\}\d*)/g;
+    var f = formula.match(regEx);
+         while(f) {
+             f.forEach(function(element) {
+             var number = element.match(/\d+$/g);
+             if(number) number = parseInt(number);
+             else number = 1;
+             var innerMatch = element.match(/[A-Z][a-z]?\d*/g);
+             var str = '';
+             innerMatch.forEach(function(subStr) {
+                var subNumber = subStr.match(/\d+$/g);
+                if(subNumber) subStr = subStr.replace(subNumber, parseInt(subNumber) * number);
+                else {
+                    if(number !== 1) subStr += number;
+                }
+                str += subStr;
+            })
+             formula = formula.replace(element, str);
+        });
+         f = formula.match(regEx);
+     }
+     return formula;
+}
+
+
+ function objectComposer(formula) {
+    var elementsObj = {}, newMatches = formula.match(/[A-Z][a-z]?\d*/g),
+    el, number;
+    newMatches.forEach(function(element) {
+        el = element.match(/[A-Z][a-z]?/g);
+        var number = parseInt((element.match(/\d+/g) || '1')[0]);
+        if(elementsObj[el]) elementsObj[el] += number;
+        else elementsObj[el] = number;
+    })
+    return elementsObj;
+ }
+
 
 elementMatcher = function (str) {
   str = str.replace(/\(/g,'').replace(/\)/g, '');
