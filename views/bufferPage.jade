@@ -2,10 +2,10 @@ extends layout
 
 block content
   .container
-    h4= buffer.nameify
+    h4 #{title}, #{buffer.volume.value} #{buffer.volume.units}
     ul
       each compound in buffer.compounds
-        li #{compound.amount} grams of #{compound.nameify}
+        li #{compound.amount} grams of #{compound.value.formula}
     form(action="/buffers/#{buffer._id}", method="post")
       .form-group
         label(for="compound") compound formula

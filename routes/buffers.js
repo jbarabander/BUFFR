@@ -48,7 +48,10 @@ router.param('bufferId', function (req, res, next, bufferId) {
 });
 
 router.get('/:bufferId', function (req, res, next) {
-  res.render('bufferPage', {buffer: req.buffer});
+  req.buffer.toString()
+  .then(function (bufferString) {
+    res.render('bufferPage', {title: bufferString, buffer: req.buffer});
+  })
 });
 
 router.post('/:bufferId', function (req, res, next) {

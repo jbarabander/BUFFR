@@ -26,7 +26,8 @@ var bufferSchema = new mongoose.Schema({
     amount: Number
   }],
   name: String,
-  user: {type: ObjectId, ref: 'User'}
+  user: {type: ObjectId, ref: 'User'},
+  string: String
 });
 
 bufferSchema.plugin(deepPopulate);
@@ -56,7 +57,7 @@ bufferSchema.virtual('nameify').get(function () {
   if (this.name) return this.name;
   var self = this;
   return this.compounds.reduce(function (name, cpd) {
-    cpdVal = cpd.value[0];
+    cpdVal = cpd.value;
     var namePart = cpd.concentration.value.toString() + ' ' + cpd.concentration.units;
     namePart += ' ' + cpdVal.formula;
     name.push(namePart);
@@ -121,6 +122,21 @@ bufferSchema.methods.populateCompounds = function () {
       resolve(buffer);
     });
   });
+};
+
+bufferSchema.methods.toString = function () {
+  if (this.name) return this.name;
+  var self = this;
+  return this.populateCompounds()
+  .then(function (buffer) {
+    return buffer.compounds.reduce(function (name, cpd) {
+      cpdVal = cpd.value;
+      var namePart = cpd.concentration.value.toString() + ' ' + cpd.concentration.units;
+      namePart += ' ' + cpdVal.formula;
+      name.push(namePart);
+      return name;
+    }, []).join(', ');
+  })
 };
 
 var Buffer = mongoose.model('Buffer', bufferSchema);

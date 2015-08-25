@@ -33,6 +33,30 @@ userSchema.methods.addBuffer = function (buffer) {
 };
 
 
+userSchema.methods.addBufferStrings = function () {
+  var self = this;
+  var buffersStore;
+  return self.populateBuffers()
+  .then(function (user) {
+    return Promise.map(user.buffers, function (buffer) {
+      return buffer.populateCompounds();
+    });
+  })
+  .then(function (buffers) {
+    buffersStore = buffers
+    return Promise.map(buffers, function (buffer) {
+      return buffer.toString();
+    });
+  })
+  .then(function (bufferStrings) {
+    return buffersStore.map(function (buffer, index) {
+      buffer.string = bufferStrings[index];
+      return buffer;
+    });
+  });
+};
+
+
 userSchema.methods.populateBuffers = function () {
   var self = this;
   return new Promise(function (resolve, reject) {

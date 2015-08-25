@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/users');
+var Promise = require('bluebird');
 
 /* GET users listing. */
 
 
 router.get('/', function(req, res, next) {
+  
   User.find()
   .then(function (users) {
     res.render('users', {users: users});
@@ -40,7 +42,11 @@ router.param('userId', function (req, res, next, userId) {
 });
 
 router.get('/:userId', function (req, res, next) {
-  res.render('userPage', {user: req.user});
+  req.user.addBufferStrings()
+  .then(function (buffers) {
+    console.log(buffers);
+    res.render('userPage', {user: req.user, buffers: buffers});
+  })
 });
 
 
