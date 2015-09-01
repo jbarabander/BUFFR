@@ -19,18 +19,11 @@ router.get('/add', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  User.create({
-    name: {
-      first: req.body.firstName,
-      last: req.body.lastName
-    },
-    username: req.body.username,
-    email: req.body.email
-  })
+  console.log(req.body);
+  User.create(req.body)
   .then(function (user) {
-    res.redirect('/users/' + user._id);
-  })
-  res.end();
+    res.send(user);
+  });
 });
 
 router.param('userId', function (req, res, next, userId) {

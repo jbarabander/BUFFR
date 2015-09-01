@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Buffer = require('../models/buffers');
 var Element = require('../models/elements');
-var path = require('path')
+var path = require('path');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

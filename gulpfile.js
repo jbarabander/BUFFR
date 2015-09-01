@@ -26,14 +26,14 @@ gulp.task('styles', function() {
 });
 
 gulp.task('scripts', function() {
-  return gulp.src('src/scripts/**/*.js')
+  return gulp.src(['src/app.js', 'src/scripts/**/*.js'])
     // .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('default'))
+    // .pipe(jshint.reporter('default'))
     .pipe(concat('main.js'))
     .pipe(gulp.dest('public/js'))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(uglify())
-    .pipe(gulp.dest('public/js'))
+    // .pipe(rename({suffix: '.min'}))
+    // .pipe(uglify())
+    // .pipe(gulp.dest('public/js'))
     .pipe(notify({ message: 'Scripts task complete' }));
 });
 
