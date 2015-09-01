@@ -11,5 +11,7 @@ block content
     h3 Here are the buffers that have already been made:
     ul
       each buffer in buffers
-        if buffer.name li = buffer.name
-        else buffer
+        if buffer.name
+            li= buffer.name
+        else 
+            buffer
