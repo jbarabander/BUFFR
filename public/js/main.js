@@ -85,7 +85,7 @@ app.controller('SignupController', function ($scope, $state, User) {
     .then(function () {
       $state.go('landing');
     });
-  }
+  };
 });
 app.factory('Buffer', function(DS, $http, $state) {
   var Buffer = DS.defineResource({

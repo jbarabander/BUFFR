@@ -1,8 +1,8 @@
-app.controller('SignupController', function ($scope, $state, UserFactory) {
+app.controller('SignupController', function ($scope, $state, User) {
   $scope.addUser = function (user) {
-    UserFactory.addUser(user)
+    User.create(user)
     .then(function () {
       $state.go('landing');
     });
-  }
+  };
 });
