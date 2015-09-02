@@ -8,7 +8,10 @@ var Promise = require('bluebird');
 
 
 router.get('/', function(req, res, next) {
-  res.redirect('/');
+  Buffer.find()
+  .then(function (buffers) {
+    res.json(buffers);
+  });
 });
 
 router.get('/add', function(req, res, next) {
