@@ -2,14 +2,14 @@
 <ul>
   <li> grams of </li>
 </ul>
-<form>
+<form name='newBufferForm' ng-submit='newBufferForm.$valid && createBuffer(newBuffer)'>
   <div class="form-group">
     <label for="compound">compound formula</label>
-    <input id="compound" type="text" name="compound" class="form-control"/>
+    <input id="compound" type="text" name="newBuffer.compound" class="form-control" required/>
   </div>
   <div class="form-group">
     <label for="concentration">concentration</label>
-    <input id="concentration" type="text" name="concentration" class="form-control"/>
+    <input id="concentration" type="text" name="newBuffer.concentration" class="form-control" required/>
   </div>
   <button type="submit" class="btn btn-success form-control">Submit</button>
 </form>

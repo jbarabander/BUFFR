@@ -20,6 +20,11 @@ app.factory('Buffer', function($http, $state) {
         return response.data;
       });
     },
+    createBuffer: function(bufferObj) {
+      return $http.post('/api/buffers', bufferObj).then(function(response){
+        return response.data;
+      });
+    },
     findOne: function (id) {
       return $http.get('/api/buffers/' + id)
       .then(function (response) {

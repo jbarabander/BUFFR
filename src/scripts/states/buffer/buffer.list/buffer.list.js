@@ -12,6 +12,14 @@ app.config(function ($stateProvider) {
   });
 });
 
-app.controller('BuffersCtrl', function ($scope, buffers) {
-  console.log(buffers);
-});
+app.controller('BuffersCtrl', function ($scope, buffers, Buffer) {
+  $scope.newBuffer = {
+    compound: null,
+    concentration: null
+  }
+  $scope.createBuffer = function(bufferObj) {
+    Buffer.createBuffer(bufferObj).then(function(element) {
+      $state.go('buffer', {id: element._id});
+    })
+  }
+ });

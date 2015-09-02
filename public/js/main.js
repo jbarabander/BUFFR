@@ -41,6 +41,11 @@ app.factory('Buffer', function($http, $state) {
         return response.data;
       });
     },
+    createBuffer: function(bufferObj) {
+      return $http.post('/api/buffers', bufferObj).then(function(response){
+        return response.data;
+      });
+    },
     findOne: function (id) {
       return $http.get('/api/buffers/' + id)
       .then(function (response) {
@@ -51,6 +56,7 @@ app.factory('Buffer', function($http, $state) {
 
   return Buffer;
 }).run(function (Buffer) {});
+
 app.factory('UserFactory', function($http) {
   function addUser(user) {
     console.log(user);
@@ -117,6 +123,14 @@ app.config(function ($stateProvider) {
   });
 });
 
-app.controller('BuffersCtrl', function ($scope, buffers) {
-  console.log(buffers);
-});
+app.controller('BuffersCtrl', function ($scope, buffers, Buffer) {
+  $scope.newBuffer = {
+    compound: null,
+    concentration: null
+  }
+  $scope.createBuffer = function(bufferObj) {
+    Buffer.createBuffer(bufferObj).then(function(element) {
+      $state.go('buffer', {id: element._id});
+    })
+  }
+ });
