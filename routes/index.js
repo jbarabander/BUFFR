@@ -5,7 +5,7 @@ var Element = require('../models/elements');
 var path = require('path');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.use('/', function(req, res, next) {
   res.sendFile(path.resolve('index.html'));
 });
 

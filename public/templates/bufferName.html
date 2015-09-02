@@ -1,0 +1,6 @@
+<span ng-if="buffer.name">{{buffer.name}}</span>
+<span ng-if="!buffer.name">
+  <span ng-repeat="compound in buffer.compounds">
+    {{compound.concentration.value}} {{compound.concentration.units}} {{compound.value.formula}},
+  </span>
+</span>

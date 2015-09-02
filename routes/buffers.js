@@ -4,12 +4,10 @@ var User = require('../models/users');
 var Buffer = require('../models/buffers');
 var Promise = require('bluebird');
 
-/* GET users listing. */
-
-
 router.get('/', function(req, res, next) {
   Buffer.find()
   .then(function (buffers) {
+    console.log(buffers);
     res.json(buffers);
   });
 });
@@ -45,16 +43,16 @@ router.param('bufferId', function (req, res, next, bufferId) {
   .populate('user')
   .then(function (buffer) {
     buffer.storeAmounts();
+    return buffer.populateCompounds();
+  })
+  .then(function (buffer) {
     req.buffer = buffer;
     next();
   }).catch(next);
 });
 
 router.get('/:bufferId', function (req, res, next) {
-  req.buffer.toString()
-  .then(function (bufferString) {
-    res.render('bufferPage', {title: bufferString, buffer: req.buffer});
-  })
+  res.json(req.buffer);
 });
 
 router.post('/:bufferId', function (req, res, next) {

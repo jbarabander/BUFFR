@@ -1,21 +1,16 @@
 body {
-  padding: 50px;
-}
+  padding: 50px; }
 
 .login {
   margin: auto;
   padding: 20px;
   background: none;
   text-align: center;
-  color: #2f4154;
-}
-.login input {
-  margin: auto;
-}
-.login button {
-  border: none;
-  color: #fff;
-}
-.login h3 {
-  color: #2f4154;
-}
+  color: #2f4154; }
+  .login input {
+    margin: auto; }
+  .login button {
+    border: none;
+    color: #fff; }
+  .login h3 {
+    color: #2f4154; }

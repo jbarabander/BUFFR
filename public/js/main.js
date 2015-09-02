@@ -1,124 +1,71 @@
-var app = angular.module('buffr', ['js-data', 'ui.router'])
-.config(function(DSProvider, $urlRouterProvider, $locationProvider) {
-
+var app = angular.module('buffr', ['ui.router'])
+.config(function ($locationProvider) {
   $locationProvider.html5Mode(true);
-  $urlRouterProvider.otherwise('/');
-
-
-  DSProvider.defaults.basePath = '/api';
-  DSProvider.defaults.idAttribute = '_id';
-  /*
-  a method to the DSProvider defaults object that automatically
-  checks if there is any data in the cache for a given service before 
-  pinging the database
-  */
-  DSProvider.defaults.getOrFind = function(service){
-    var data = this.getAll();
-    if (data.length) return Promise.resolve(angular.copy(data));
-    else {
-      return this.findAll().then(function(data){
-        return angular.copy(data);
-      });
-    }
-  };
-})
-.config(function(DSProvider) {
-  // Mongoose Relation Fix (fixes deserialization)
-  // From http://plnkr.co/edit/3z90PD9wwwhWdnVrZqkB?p=preview
-  // This was shown to us by @jmdobry, the idea here is that
-  // we fix the data coming from Mongoose models in js-data rather than outbound from Mongoose
-  function fixRelations(Resource, instance) {
-    function fixLocalKeys(i) {
-      JSData.DSUtils.forEach(Resource.relationList, function(def) {
-        var relationName = def.relation;
-        var relationDef = Resource.getResource(relationName);
-        if (def.type === 'hasMany') {
-          if (i.hasOwnProperty(def.localField)) {
-            if (i[def.localField].length && !JSData.DSUtils.isObject(i[def.localField][0])) {
-              // Case 1: array of _ids where array of populated objects should be
-              i[def.localKeys] = i[def.localField];
-              delete i[def.localField];
-            } else if (!i[def.localKeys]) {
-              // Case 2: array of populated objects, but missing array of _ids'
-              i[def.localKeys] = [];
-              JSData.DSUtils.forEach(i[def.localField], function(child) {
-                i[def.localKeys].push(child[relationDef.idAttribute]);
-              });
-            }
-          }
-        } 
-        else if (def.type === 'belongsTo') {
-          if (i.hasOwnProperty(def.localField)) {
-            // if the localfIeld is a popualted object 
-            if (JSData.DSUtils.isObject(i[def.localField])) {
-              i[def.localKey] = i[def.localField]._id;
-            } 
-            // if the localfield is an object id 
-            else if (!JSData.DSUtils.isObject(i[def.localField])) {
-              i[def.localKey] = i[def.localField];
-              delete i[def.localField];
-            }
-          }
-        }
-      });
-    }
-    if (JSData.DSUtils.isArray(instance)) {
-      JSData.DSUtils.forEach(instance, fixLocalKeys);
-    } else {
-      fixLocalKeys(instance);
-    }
-  }
-
-
-  DSProvider.defaults.deserialize = function(Resource, data) {
-    console.log("resource", Resource);
-    console.log("data", data);
-    var instance = data.data;
-    fixRelations(Resource, instance);
-    return instance;
-  };
-  // End Mongoose Relation fix
-})
-app.controller('SignupController', function ($scope, $state, User) {
+});
+app.controller('SignupController', function ($scope, $state, UserFactory) {
   $scope.addUser = function (user) {
-    User.create(user)
+    UserFactory.addUser(user)
     .then(function () {
       $state.go('landing');
     });
   }
 });
-app.factory('Buffer', function(DS, $http, $state) {
-  var Buffer = DS.defineResource({
-    name: 'buffers',
-    methods: {
-      go: function () {
-        $state.go('buffer', {bufferId: this._id});
-      }
+app.directive('bufferName', function () {
+  return {
+    restrict: 'E',
+    templateUrl: 'templates/bufferName.html',
+    scope: {
+      buffer: '='
     }
-  });
+  }
+});
+app.factory('Buffer', function($http, $state) {
+  function Buffer (props) {
+    angular.extend(this, props);
+  }
+
+  Buffer.url = '/api/buffers/';
+
+  Buffer.prototype.getUrl = function () {
+    return Buffer.url + this._id;
+  };
+
+  Buffer.prototype.isNew = function () {
+    return !this._id;
+  };
+
+  var Buffer = {
+    findAll: function () {
+      return $http.get('/api/buffers')
+      .then(function (response) {
+        return response.data;
+      });
+    },
+    findOne: function (id) {
+      return $http.get('/api/buffers/' + id)
+      .then(function (response) {
+        return response.data;
+      });
+    }
+  };
 
   return Buffer;
 }).run(function (Buffer) {});
-app.factory('User', function(DS, $http, $state) {
-  var User = DS.defineResource({
-    name: 'users',
-    relations: {
-      hasMany: {
-        buffers: {
-          localKey: 'bufferIds',
-          localField: 'buffers'
-        }
-      }
-    },
-    methods: {
-      go: function () {
-        $state.go('user', {postId: this._id});
-      }
-    }
-  });
+app.factory('UserFactory', function($http) {
+  function addUser(user) {
+    console.log(user);
+    return $http.post('/users', user)
+    .then(function (response) {
+      return response.data;
+    });
+  }
 
-  return User;
-}).run(function (User) {});
+
+
+  return {
+    addUser: addUser
+  };
+});
 app.config(function ($stateProvider) {
   $stateProvider.state('landing', {
     url: '/',
@@ -147,22 +94,22 @@ app.config(function ($stateProvider) {
     controller: 'BufferCtrl',
     resolve: {
       buffer: function (Buffer, $stateParams) {
-        return Buffer.find($stateParams.bufferId);
+        return Buffer.findOne($stateParams.bufferId);
       }
     }
   });
 });
 
 app.controller('BufferCtrl', function ($scope, buffer) {
-  console.log(buffer);
-})
+  $scope.buffer = buffer;
+});
 app.config(function ($stateProvider) {
   $stateProvider.state('buffers', {
     url: '/buffers',
     templateUrl: '/templates/bufferList.html',
     controller: 'BuffersCtrl',
     resolve: {
-      buffers: function (Buffer, $stateParams) {
+      buffers: function (Buffer) {
         console.log("got here")
         return Buffer.findAll();
       }

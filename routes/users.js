@@ -19,10 +19,8 @@ router.get('/add', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  console.log(req.body);
   User.create(req.body)
   .then(function (user) {
-    console.log(user);
     res.send(user);
   });
 });
