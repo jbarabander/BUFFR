@@ -35,8 +35,13 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/api/users', require('./routes/users'));
 app.use('/api/buffers', require('./routes/buffers'));
-app.use('/', function (req, res, next) {
-  res.sendFile(path.resolve('index.html'));
+
+
+var validFrontendRoutes = ['/', '/buffers', '/users', '/buffers/:id', '/users/:id', '/signup/new', '/signup/login'];
+validFrontendRoutes.forEach(function (stateRoute) {
+  app.get(stateRoute, function (req, res) {
+    res.sendFile('index.html');
+  });
 });
 
 // catch 404 and forward to error handler
