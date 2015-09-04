@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .container
+    h1= user.name.first
+    p Email: #{user.email}
+    h4 #{user.name.first}'s buffers
+    ul
+      each buffer in buffers
+        a(href="/buffers/#{buffer._id}")
+          li #{buffer.string}, #{buffer.volume.value} #{buffer.volume.units}
+    h4 Make a new buffer as #{user.name.first}:
+    form(action="/buffers", method="post")
+      .form-group
+        label(for="volume") volume (5 L, 500mL)
+        input(id="volume", type="text", name="volume").form-control
+      .form-group
+        label(for="userId") Prefilled user ID
+        input(id="userId", type="text", name="userId", value="#{user._id}").form-control
+      button(type="submit").btn.btn-success.form-control Submit

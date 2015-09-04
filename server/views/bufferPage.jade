@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  .container
+    h4 #{title}, #{buffer.volume.value} #{buffer.volume.units}
+    ul
+      each compound in buffer.compounds
+        li #{compound.amount} grams of #{compound.value.formula}
+    form(action="/buffers/#{buffer._id}", method="post")
+      .form-group
+        label(for="compound") compound formula
+        input(id="compound", type="text", name="compound").form-control
+      .form-group
+        label(for="concentration") concentration
+        input(id="concentration", type="text", name="concentration").form-control
+      button(type="submit").btn.btn-success.form-control Submit

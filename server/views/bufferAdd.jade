@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  .container
+    h4 Make a new buffer:
+    form(action="/buffers", method="post")
+      .form-group
+        label(for="volume") volume (5 L, 500mL)
+        input(id="volume", type="text", name="volume").form-control
+      button(type="submit").btn.btn-success.form-control Submit

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  .container
+    h1= title
+    p Welcome to #{title}
+    p This is an app designed to make and remember calculations of buffer solutions for biologists and biochemists.
+    a(href="/users/add").btn.btn-success Click here to make an account.
+    a(href="#").btn.btn-warning Click here to make a buffer without an account.
+    br
+    h3 Here are the buffers that have already been made:
+    ul
+      each buffer in buffers
+        if buffer.name
+            li= buffer.name
+        else 
+            buffer
