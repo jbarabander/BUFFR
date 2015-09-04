@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .container
+    h1 Add a User
+    form(action="/users", method="post")
+      .form-group
+        label(for="firstName") first name
+        input(id="firstName", type="text", name="firstName").form-control
+        label(for="lastName") last name
+        input(id="lastName", type="text", name="lastName").form-control
+      .form-group
+        label(for="username") username
+        input(id="username", type="text", name="username").form-control
+      .form-group
+        label(for="email") email
+        input(id="email", type="text", name="email").form-control
+      button(type="submit").btn.btn-success.form-control Submit

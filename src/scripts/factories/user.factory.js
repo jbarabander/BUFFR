@@ -4,8 +4,8 @@ app.factory('User', function(DS, $http, $state) {
     relations: {
       hasMany: {
         buffers: {
-          localKey: 'bufferIds',
-          localField: 'buffers'
+          localKeys: 'buffers',
+          localField: '_buffers'
         }
       }
     },
